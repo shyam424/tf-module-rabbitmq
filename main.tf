@@ -30,6 +30,9 @@ resource "aws_security_group" "main" {
 
 }
 
+#-------------------------------------------------------------------------------------------------------------------
+###building of rabbit mq is different from the other DB's ad the code will not work o=in the rabbitmq provided by the aws,
+###so we are calling the ansible scripts for rabbitmq and creating the ec2 isntance.
 resource "aws_instance" "main" {
   ami                       = data.aws_ami.ami.id
   instance_type             = var.instance_type
@@ -39,3 +42,13 @@ resource "aws_instance" "main" {
   user_data                 = file("${path.module}/userdata.sh")
 
 }
+#creating dns record for rabbitmq
+resource "aws_route53_record" "main" {
+  zone_id = var.zone_id
+  name    = "rabbitmq-$(var.env}"
+  type    = "A"
+  ttl     = 30
+  records = [aws_instance.main.private_ip]
+}
+
+##---------------------------------------------------------------------------------------------------------------------

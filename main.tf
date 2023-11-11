@@ -36,6 +36,6 @@ resource "aws_instance" "main" {
   vpc_security_group_ids    = [aws_security_group.main.id]
   subnet_id                 = var.subnet_ids[0]
   tags                      = merge(local.tags, {Name = "${local.name_prefix}-rabbitmq"})
-  user_date                 = "${path.module}/userdata.sh"
+  user_data                 = "${path.module}/userdata.sh"
 
 }
